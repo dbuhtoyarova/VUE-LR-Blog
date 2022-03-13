@@ -26,14 +26,11 @@
 <script>
 export default {
   name: "Category",
-  data: () => ({
-    categories: [
-      {"id":"1","title":"Lifestyle","alias":"lifestyle"},
-      {"id":"2","title":"Food","alias":"food"},
-      {"id":"3","title":"Nature","alias":"nature"},
-      {"id":"4","title":"Photography","alias":"photography"}
-    ],
-  })
+  computed: {
+    categories: function () {
+      return this.$store.getters.CATEGORIES;
+    }
+  }
 
 }
 </script>

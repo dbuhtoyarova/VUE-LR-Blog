@@ -27,10 +27,10 @@
       </div>
       <v-spacer></v-spacer>
       <nav>
-        <router-link to="/">Home | </router-link>
-        <router-link to="/categories">Categories | </router-link>
-        <router-link to="/posts">Posts | </router-link>
-        <router-link to="/about">About</router-link>
+        <router-link to="/">Главная | </router-link>
+        <router-link to="/categories">Категории | </router-link>
+        <router-link to="/posts">Посты | </router-link>
+        <router-link to="/about">О себе</router-link>
       </nav>
       <v-spacer></v-spacer>
 
