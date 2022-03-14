@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col
-          v-for="(post, i) in newPosts"
+          v-for="(post, i) in posts"
           :key="i"
       >
         <v-card
@@ -39,6 +39,7 @@
             <v-btn
                 color="deep-purple lighten-2"
                 text
+                @click="delete_post(post.id)"
             >
               Delete
             </v-btn>
@@ -63,18 +64,20 @@ export default {
 
   }),
   computed: {
-    newPosts: function () {
-      return this.$store.getters.POSTS.filter((post) =>  {
-        const categories = this.$store.getters.CATEGORIES;
-        const post_category = categories.find((category)=> {
-          return category.id === post.category_id;
-        });
-        post.category = post_category ? post_category.title : 'unknown';
-        return post.img = "http://mysite/" + post.img;
-      })
+    posts: function () {
+      return this.$store.getters.POSTS;
+    },
+  },
+  mounted() {
+    this.$store.dispatch('GET_CATEGORIES').then(() => {
+      this.$store.dispatch('GET_POSTS');
+    });
+  },
+  methods: {
+    delete_post(id) {
+      this.$store.dispatch('DELETE_POST', id);
     }
   },
-  methods: {},
 }
 </script>
 

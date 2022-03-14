@@ -30,6 +30,10 @@ export default {
     categories: function () {
       return this.$store.getters.CATEGORIES;
     }
+
+  },
+  mounted() {
+    this.$store.dispatch('GET_CATEGORIES');
   }
 
 }
