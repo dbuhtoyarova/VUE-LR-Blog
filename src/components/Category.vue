@@ -51,48 +51,60 @@
           max-width="600px"
       >
 
-        <v-card>
-          <v-card-title>
-            <span class="text-h5">{{ dialogTitle }}</span>
-          </v-card-title>
-          <v-card-text>
-            <v-container>
-              <v-row>
-                <v-text-field
-                    label="Название*"
-                    v-model="model.title"
-                    required
-                ></v-text-field>
-              </v-row>
-            </v-container>
-            <small>* Обязательно для заполнения</small>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-                color="blue darken-1"
-                text
-                @click="dialog = false"
-            >
-              Закрыть
-            </v-btn>
-            <v-btn
-                color="blue darken-1"
-                text
-                @click="mode === 'Добавить' ? save() : update()"
-            >
-              {{ mode }}
-            </v-btn>
-          </v-card-actions>
-        </v-card>
+        <ValidationObserver ref="obs" v-slot="{ invalid }">
+          <v-card>
+            <v-card-title>
+              <span class="text-h5">{{ dialogTitle }}</span>
+            </v-card-title>
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <ValidationProvider name="title" rules="required|max:50|min:5" v-slot="{ errors, valid }">
+                    <v-text-field
+                        label="Название*"
+                        v-model="model.title"
+                        required
+                        :counter="50"
+                        :error-messages="errors"
+                        :success="valid"
+                    >
+                    </v-text-field>
+                  </ValidationProvider>
+                </v-row>
+              </v-container>
+              <small>* Обязательно для заполнения</small>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                  color="blue darken-1"
+                  text
+                  @click="reset"
+              >
+                Закрыть
+              </v-btn>
+              <v-btn
+                  color="blue darken-1"
+                  text
+                  :disabled="invalid"
+                  @click="mode === 'Добавить' ? save() : update()"
+              >
+                {{ mode }}
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </ValidationObserver>
       </v-dialog>
     </template>
   </v-card>
 </template>
 
 <script>
+import {ValidationObserver, ValidationProvider} from "vee-validate";
+
 export default {
   name: "Category",
+  components: {ValidationObserver, ValidationProvider},
   data() {
     return {
       mode: '',
@@ -107,10 +119,8 @@ export default {
     dialogTitle() {
       return `${this.mode} категорию`;
     },
-
   },
   mounted() {
-    this.reset();
     this.$store.dispatch('GET_CATEGORIES');
   },
   methods: {
@@ -127,23 +137,29 @@ export default {
       this.model.id = model.id;
       this.dialog = true;
     },
-    save() {
-      this.$store.dispatch('ADD_CATEGORY', this.model).then(() => {
-        this.reset();
-      });
+    async save() {
+      const isValid = await this.$refs.obs.validate();
+      if (isValid) {
+        this.$store.dispatch('ADD_CATEGORY', this.model).then(() => {
+          this.reset();
+        });
+      }
     },
-
-    update() {
-      this.$store.dispatch('UPDATE_CATEGORY', this.model).then(() => {
-        this.reset();
-      });
+    async update() {
+      const isValid = await this.$refs.obs.validate();
+      if (isValid) {
+        this.$store.dispatch('UPDATE_CATEGORY', this.model).then(() => {
+          this.reset();
+        });
+      }
     },
     reset() {
       this.dialog = false;
       this.model = {
         title: '',
       };
-    },
+      this.$refs.obs.reset();
+    }
   },
 
 }
