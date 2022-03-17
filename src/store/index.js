@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from "axios";
-import category from "@/components/Category";
+import moment from "moment";
 
 Vue.use(Vuex)
 
@@ -24,11 +24,11 @@ export default new Vuex.Store({
         },
     },
     actions: {
-        GET_CATEGORIES: async (context, payload) => {
+        GET_CATEGORIES: async (context) => {
             let {data} = await axios.get('http://mysite/api/categories');
             context.commit('SET_CATEGORIES', data);
         },
-        GET_POSTS: async (context, payload) => {
+        GET_POSTS: async (context) => {
             let {data} = await axios.get('http://mysite/api/posts');
             const posts = data.map((post) => {
                 post.img = 'http://mysite/' + post.img;
@@ -42,32 +42,62 @@ export default new Vuex.Store({
             context.commit('SET_POSTS', posts);
         },
         DELETE_CATEGORIES: async (context, payload) => {
-            let {data, status} = await axios.delete('http://mysite/api/categories/' + payload);
+            let {status} = await axios.delete('http://mysite/api/categories/' + payload);
             if (status === 204) {
                 context.commit('SET_CATEGORIES', context.getters.CATEGORIES.filter((category) => category.id !== payload));
             }
         },
         DELETE_POST: async (context, payload) => {
-            let {data, status} = await axios.delete('http://mysite/api/posts/' + payload);
+            let {status} = await axios.delete('http://mysite/api/posts/' + payload);
             if (status === 204) {
                 context.commit('SET_POSTS', context.getters.POSTS.filter((post) => post.id !== payload));
             }
         },
         ADD_CATEGORY: async (context, payload) => {
 
-            let {data, status} = await axios.post('http://mysite/api/categories', {...payload, alias: payload.title.toLowerCase()});
+            let {data, status} = await axios.post('http://mysite/api/categories', {
+                ...payload,
+                alias: payload.title.toLowerCase()
+            });
             if (status === 201) {
                 context.commit('SET_CATEGORIES', [...context.getters.CATEGORIES, data]);
             }
         },
         UPDATE_CATEGORY: async (context, payload) => {
-            let {data, status} = await axios.put('http://mysite/api/categories/' + payload.id, {...payload, alias: payload.title.toLowerCase()});
+            let {data, status} = await axios.put('http://mysite/api/categories/' + payload.id, {
+                ...payload,
+                alias: payload.title.toLowerCase()
+            });
             if (status === 200) {
                 context.commit('SET_CATEGORIES', context.getters.CATEGORIES.map(category => {
                     if (category.id === data.id) {
                         return data;
                     }
                     return category;
+                }));
+            }
+        },
+        ADD_POST: async (context, payload) => {
+            let {data, status} = await axios.post('http://mysite/api/posts', {
+                ...payload,
+                excerpt: payload.content.slice(0, 255),
+                created_at: moment().format('YYYY-MM-DD hh:mm:ss')
+            });
+            if (status === 201) {
+                context.commit('SET_POSTS', [...context.getters.POSTS, data]);
+            }
+        },
+        UPDATE_POST: async (context, payload) => {
+            let {data, status} = await axios.put('http://mysite/api/posts/' + payload.id, {
+                ...payload,
+                alias: payload.title.toLowerCase()
+            });
+            if (status === 200) {
+                context.commit('SET_POSTS', context.getters.POSTS.map(post => {
+                    if (post.id === data.id) {
+                        return data;
+                    }
+                    return post;
                 }));
             }
         },
