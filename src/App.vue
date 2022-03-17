@@ -27,9 +27,9 @@
       </div>
       <v-spacer></v-spacer>
       <nav>
-        <router-link to="/">Главная | </router-link>
-        <router-link to="/categories">Категории | </router-link>
-        <router-link to="/posts">Посты | </router-link>
+        <router-link to="/">Главная |</router-link>
+        <router-link to="/categories">Категории |</router-link>
+        <router-link to="/posts">Посты |</router-link>
         <router-link to="/about">О себе</router-link>
       </nav>
       <v-spacer></v-spacer>
@@ -63,6 +63,6 @@ export default {
 
 <style>
 nav a {
-  color: white!important;
+  color: white !important;
 }
 </style>

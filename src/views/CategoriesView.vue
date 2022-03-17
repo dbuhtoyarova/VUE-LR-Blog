@@ -4,6 +4,7 @@
 
 <script>
 import Category from "../components/Category";
+
 export default {
   name: "CategoriesView",
   components: {Category}

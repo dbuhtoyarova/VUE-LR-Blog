@@ -47,44 +47,44 @@
     <template>
       <v-dialog
           v-model="dialog"
-      persistent
-      max-width="600px"
+          persistent
+          max-width="600px"
       >
 
-      <v-card>
-        <v-card-title>
-          <span class="text-h5">{{ dialogTitle }}</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-text-field
-                  label="Название*"
-              v-model="model.title"
-              required
-              ></v-text-field>
-            </v-row>
-          </v-container>
-          <small>* Обязательно для заполнения</small>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-              color="blue darken-1"
-              text
-              @click="dialog = false"
-          >
-            Закрыть
-          </v-btn>
-          <v-btn
-              color="blue darken-1"
-              text
-              @click="mode === 'Добавить' ? save() : update()"
-          >
-            {{ mode }}
-          </v-btn>
-        </v-card-actions>
-      </v-card>
+        <v-card>
+          <v-card-title>
+            <span class="text-h5">{{ dialogTitle }}</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-text-field
+                    label="Название*"
+                    v-model="model.title"
+                    required
+                ></v-text-field>
+              </v-row>
+            </v-container>
+            <small>* Обязательно для заполнения</small>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+                color="blue darken-1"
+                text
+                @click="dialog = false"
+            >
+              Закрыть
+            </v-btn>
+            <v-btn
+                color="blue darken-1"
+                text
+                @click="mode === 'Добавить' ? save() : update()"
+            >
+              {{ mode }}
+            </v-btn>
+          </v-card-actions>
+        </v-card>
       </v-dialog>
     </template>
   </v-card>
