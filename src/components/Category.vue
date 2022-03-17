@@ -4,7 +4,10 @@
       max-width="300"
       tile
   >
-    <v-list dense>
+    <div v-if="loading" class="text-center my-10">
+      <v-progress-circular indeterminate color="primary"></v-progress-circular>
+    </div>
+    <v-list dense v-else>
 
       <v-subheader>Категории:</v-subheader>
       <v-list-item-group
@@ -110,6 +113,7 @@ export default {
       mode: '',
       dialog: false,
       model: {},
+      loading:false,
     }
   },
   computed: {
@@ -121,7 +125,10 @@ export default {
     },
   },
   mounted() {
-    this.$store.dispatch('GET_CATEGORIES');
+    this.loading = true;
+    this.$store.dispatch('GET_CATEGORIES').then(()=> {
+      this.loading = false;
+    });
   },
   methods: {
     delete_category(id) {

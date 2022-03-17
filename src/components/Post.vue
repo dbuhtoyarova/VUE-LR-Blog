@@ -1,6 +1,9 @@
 <template>
   <v-container>
-    <v-row>
+    <div v-if="loading" class="text-center my-10">
+      <v-progress-circular indeterminate color="primary"></v-progress-circular>
+    </div>
+    <v-row v-else>
       <v-col
           v-for="(post, i) in posts"
           :key="i"
@@ -168,6 +171,7 @@ export default {
       mode: '',
       dialog: false,
       model: {},
+      loading: false,
     };
   },
   computed: {
@@ -182,8 +186,11 @@ export default {
     },
   },
   mounted() {
+    this.loading = true;
     this.$store.dispatch('GET_CATEGORIES').then(() => {
-      this.$store.dispatch('GET_POSTS');
+      this.$store.dispatch('GET_POSTS').then(() => {
+        this.loading = false;
+      });
     });
   },
   methods: {
